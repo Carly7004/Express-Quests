@@ -69,7 +69,7 @@ const getMovieById = (req, res) => {
   // }
 };
 
-// Post
+// Post and INSERT NEW ITEM ON THE DATABASE TABLE
 
 const postMovie = (req, res) => {
   const { title, director, year, color, duration } = req.body;
@@ -88,8 +88,34 @@ const postMovie = (req, res) => {
   res.send("Post route is working ✨ ");
 };
 
+
+// Put and UPDATE DATABASE TABLE
+
+const updateMovie = (req, res) => {
+  const id = parseInt(req.params.id);
+  const { title, director, year, color, duration } = req.body;
+
+  database
+    .query(
+      "UPDATE movies SET title = ?, director = ?, year = ?, color = ?, duration = ? where id = ?",
+      [title, director, year, color, duration, id]
+    )
+    .then(([result]) => {
+      if (result.affectedRows === 0) {
+        res.status(404).send("Not Found");
+      } else {
+        res.sendStatus(204);
+      }
+    })
+    .catch((err) => {
+      console.error(err);
+      res.status(500).send("Error editing the movie");
+    });
+};
+
 module.exports = {
   getMovies,
   getMovieById,
   postMovie,
+  updateMovie
 };

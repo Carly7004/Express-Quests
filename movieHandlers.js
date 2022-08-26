@@ -38,26 +38,26 @@ const getMovies = (req, res) => {
 
 const getMovieById = (req, res) => {
   const id = parseInt(req.params.id);
+  movies.find((movie) => movie.id === id);
 
-  // database.query(`select * from movies where id = ${id}`)
-  // .then(([movie]) => {
-  //   res.json(movie).send('movie data has been sent')
-  // }).catch((error) => {
-  //   res.status(400).send('Not Found')
-  // })
-
-  const movieid = movies.find((movie) => movie.id === id);
-
-  database.query('select * from movies where id = ?', [id])
+  database.query(`select * from movies where id = ${id}`)
   .then(([movie]) => {
-    if (movie !== null) {
-      res.json(movie);
-    } else {
-      res.status(404).send("Not Found");
-    }
+    if(!movie) return res.status(404).send('Not Found')
   }).catch((error) => {
     res.status(400).send('Not Found')
   })
+
+
+  // database.query(`select * from movies where id = ${id}`)
+  // .then(([movie]) => {
+  //   if (movie !== null) {
+  //     res.json(movie);
+  //   } else {
+  //     res.status(404).send("Not Found");
+  //   }
+  // }).catch((error) => {
+  //   res.status(400).send('Not Found')
+  // })
 
   // if (movie != null) {
   //   res.json(movie);
@@ -65,6 +65,8 @@ const getMovieById = (req, res) => {
   //   res.status(404).send("Not Found");
   // }
 };
+
+
 
 module.exports = {
   getMovies,

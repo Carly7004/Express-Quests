@@ -1,5 +1,5 @@
 const express = require("express");
-require('dotenv').config();
+require("dotenv").config();
 
 const app = express();
 
@@ -24,17 +24,7 @@ app.listen(port, (err) => {
   }
 });
 
+const userHandlers = require("./userHandler");
 
-const user = require("./user");
-
-
-app.get('/api/user', (req, res) => {
-  res.status(200).json(user);
-})
-
-app.get("/api/user/:id", (req, res) => {
-  const findUser = user.find((e) => e.id === parseInt(req.params.id));
-  if (!findUser) return res.status(400).send("Not Found");
-  res.json(findUser).status(200);
-});
-
+app.get("/api/users", userHandlers.getUsers);
+app.get("/api/users/:id", userHandlers.getUserById);

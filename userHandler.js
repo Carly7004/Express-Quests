@@ -35,6 +35,23 @@ const getUserById = (req, res) => {
     });
 };
 
+const postUser = (req, res) => {
+    const { firstname, lastname, email, city, language } = req.body;
+    database.query(
+      "INSERT INTO users (firstname, lastname, email, city, language) VALUES (?, ?, ?, ?, ?)",
+      [firstname, lastname, email, city, language]
+    )
+    .then(([result]) => {
+      res.location(`/api/users ${result.insertId}`).sendStatus(201)
+      console.log(result)
+    })
+    .catch((err) => {
+      console.error(err);
+      res.status(500).send('Error saving the users')
+    })
+    res.send("Post route is working ✨ ");
+  };
+
 // const getUserid = (req, res) => {
 //   database.query(`select * from users where id = ${id}`);
 //   const findUser = users.find((e) => e.id === parseInt(req.params.id));
@@ -45,4 +62,5 @@ const getUserById = (req, res) => {
 module.exports = {
   getUserById,
   getUsers,
+  postUser
 };

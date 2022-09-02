@@ -35,6 +35,38 @@ const getUserById = (req, res) => {
     });
 };
 
+// Get by Filtering
+
+// Get by sorting #1 method
+
+const getUserByFilter = (req, res) => {
+  let sql = "select * from users";
+  const sqlValues = [];
+
+  if (req.query.language != null) {
+    sql += " where language = ?";
+    sqlValues.push(req.query.language);
+  
+    if (req.query.city != null) {
+      sql += " and city = ?";
+      sqlValues.push(req.query.city);
+    }
+  } else if (req.query.city != null) {
+    sql += " where city <= ?";
+    sqlValues.push(req.query.city);
+  }
+
+  database
+    .query(sql, sqlValues)
+    .then(([user]) => {
+      res.json(user);
+    })
+    .catch((err) => {
+      console.error(err);
+      res.status(500).send("Error retrieving data from database");
+    });
+};
+
 //POST and POST NEW USER ON THE DATABASE TABLE
 
 const postUser = (req, res) => {
@@ -111,5 +143,6 @@ module.exports = {
   getUsers,
   postUser,
   updateUser,
-  deleteUser
+  deleteUser,
+  getUserByFilter
 };
